@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<link rel='stylesheet' type='text/css' href='main.css'/>
+<body>
+
+<div id='graph1'></div>
+
+<script src="d3.js"></script>
+<script src='graph.js'></script>
+<script>
+
+var g = Graph({
+  "elm": "#graph1"
+});
+
+setInterval(function(){
+  g.addPoint(Math.random() - .5);
+},1000);
+
+</script>
+</body>
+</html>
