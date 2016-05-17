@@ -12,6 +12,13 @@ app = Flask(__name__, static_url_path='')
 def root():
     return app.send_static_file('index.html')
 
+@app.route('/sample')
+def sample():
+    #TODO server-side sampling
+    return """
+
+    """
+
 @app.route('/coordinates')
 def getWebcam():
     start = int(request.args.get('start'))
