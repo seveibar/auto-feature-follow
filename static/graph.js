@@ -70,12 +70,12 @@ function Graph(params){
       queuedData.shift();
       data.shift();
     }
-    var speed = .1 + queuedData.length/5;
+    var speed = .3 + queuedData.length/2;
     path
         .attr("d", line)
         .attr("transform", null)
       .transition()
-        .duration(500 / speed)
+        .duration(100 / speed)
         .ease("linear")
         .attr("transform", "translate(" + x(-1) + ",0)")
         .each('end', updateGraph);

@@ -3,8 +3,11 @@ import cv2
 import time
 import pickle
 import sys
-import tracker
+import json
+import redis as Redis
+import base64
 
+redis = Redis.StrictRedis(host='localhost', port=6379, db=0)
 
 vc = cv2.VideoCapture(1)
 
@@ -26,11 +29,14 @@ class CamImageLoader:
 
 loader = CamImageLoader()
 
+def clearVideoBuffer():
+    global vc
+    for i in range(4):
+        vc.read()
+
 def loadPreviousCalibration():
     global xcalFrames, ycalFrames, settings, scene
     prev = pickle.load(open('last_cal.pickle'))
-    xcalFrames = prev['xcal']
-    ycalFrames = prev['ycal']
     settings = prev['settings']
     scene = prev['scene']
 
@@ -40,6 +46,7 @@ def promptForCalibration():
         loadPreviousCalibration()
     else:
         raw_input("Press to begin xcal...")
+        clearVideoBuffer()
         # Read all the frames for xcal
         xcalFrames = []
         for i in range(calFrames):
@@ -49,6 +56,8 @@ def promptForCalibration():
         print("xcal complete")
 
         raw_input("Press to begin ycal...")
+        clearVideoBuffer()
+        # clear buffer
         ycalFrames = []
         for i in range(calFrames):
             time.sleep(frameTime)
@@ -56,16 +65,19 @@ def promptForCalibration():
             ycalFrames.append(frame)
         print("ycal complete")
 
+        # for i,f in enumerate(xcalFrames):
+        #     cv2.imwrite("x_{}.png".format(i), f)
+        # for i,f in enumerate(ycalFrames):
+        #     cv2.imwrite("y_{}.png".format(i), f)
+
         settings = lib.CalibrationSettings(
             ['x','y'],
-            [0,calFrames],
+            [0,calFrames+1],
             [calFrames-1,calFrames*2])
 
         scene = lib.CalibrationScene(loader, 0, settings)
 
         pickle.dump({
-            "xcal": xcalFrames,
-            "ycal": ycalFrames,
             "settings": settings,
             "scene": scene
         }, open('last_cal.pickle','w'))
@@ -73,14 +85,30 @@ def promptForCalibration():
 promptForCalibration()
 # loadPreviousCalibration()
 #
+print(scene.vec)
 while True:
     # time.sleep(1)
     rval, frame = vc.read()
+    # encoded = base64.b64encode(open("filename.png", "rb").read())
     coordinate = scene.getAxisProjection(frame)
     if coordinate is not None:
-        # n = tracker.addCoordinate.delay(coordinate.tolist()).get()
-        tracker.addCoordinate.delay(coordinate.tolist())
-    else:
-        tracker.addCoordinate.delay(None)
+        coordinate = coordinate.tolist()
+    frame_encoded = base64.encodestring(cv2.imencode('.png',frame)[1])
+    redis.publish("socket-redis-down", json.dumps({
+        "type": "publish",
+        "data": {
+            "channel":"coord",
+            "event":"coord",
+            "data": coordinate
+        }
+    }))
+    redis.publish("socket-redis-down", json.dumps({
+        "type": "publish",
+        "data": {
+            "channel":"image",
+            "event":"image",
+            "data": frame_encoded
+        }
+    }))
     # if (n % 10 == 0):
     #     cv2.imwrite("static/imgs/frame{}.png".format(n), frame)

@@ -41,7 +41,7 @@ def getFeatureDetector():
     if (pyversion == 3):
         return cv2.xfeatures2d.SURF_create()
     else:
-        return cv2.SIFT()
+        return cv2.SURF(upright=True, hessianThreshold=300)
 #-------------------------------
 def getSharedKeypoints(img1, img2,sensitivity=.5):
     sift = getFeatureDetector()
@@ -167,15 +167,19 @@ class CalibrationScene(Scene):
         self.descriptors = []
         self.start = []
         self.vec = []
+        self.vec_length = []
         self.sensitivites = []
         for ai in range(len(self.settings.axes)):
             imgs = list(self.load(
                 self.settings.start_times[ai],
                 self.settings.end_times[ai]))
+            print(self.settings.start_times[ai], self.settings.end_times[ai])
             sensitivity = .5
+            # cv2.imwrite("a{}_1.png".format(ai), imgs[0])
+            # cv2.imwrite("a{}_2.png".format(ai), imgs[-1])
             descriptors = getSharedDescriptors(imgs[0], imgs[-1], sensitivity=sensitivity)
             # make sure there are enough descriptors
-            while len(descriptors) < 8:
+            while len(descriptors) < 20:
                 sensitivity += .02
                 descriptors = getSharedDescriptors(imgs[0], imgs[-1], sensitivity=sensitivity)
 
@@ -191,6 +195,7 @@ class CalibrationScene(Scene):
             self.sensitivites.append(sensitivity)
             self.start.append(start)
             vec = np.average(end - start, axis=0)
+            self.vec_length.append(np.linalg.norm(vec))
             vec = vec / np.linalg.norm(vec)
             self.vec.append(vec)
         self.sensitivites = np.array(self.sensitivites)
@@ -202,7 +207,7 @@ class CalibrationScene(Scene):
             if len(pts) == 0:
                 return None
             offset =np.average(pts - start[fdes == 1], axis=0)
-            projections.append(np.dot(self.vec[i], offset))
+            projections.append(np.dot(self.vec[i], offset) / self.vec_length[i])
         return np.array(projections)
 
     def getFeaturesFromAxisProject(self, img):

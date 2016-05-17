@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/styles/Streams.xsl"?>
+<MTConnectStreams xmlns:m="urn:mtconnect.org:MTConnectStreams:1.3" xmlns="urn:mtconnect.org:MTConnectStreams:1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="./schema.xml">
+<Header creationTime="{TIME}" sender="mtcagent" instanceId="0" version="1.3.0.9" nextSequence="{SEQ}" firstSequence="0" lastSequence="{SEQ}"/>
+<Streams>
+    <DeviceStream name="VMC-3Axis" uuid="000">
+      <ComponentStream component="Linear" name="X" componentId="x1">
+      <Samples>
+        <Position dataItemId="x1" timestamp="{TIMESTAMP}" name="xPos" sequence="{SEQ}" subType="ACTUAL">{X}</Position>
+        <Position dataItemId="y1" timestamp="{TIMESTAMP}" name="yPos" sequence="{SEQ}" subType="ACTUAL">{Y}</Position>
+        <Position dataItemId="z1" timestamp="{TIMESTAMP}" name="zPos" sequence="{SEQ}" subType="ACTUAL">{Z}</Position>
+      </Samples>
+    </DeviceStream>
+</Streams>
+</MTConnectStreams>

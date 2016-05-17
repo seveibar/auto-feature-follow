@@ -14,3 +14,8 @@ svg {
   stroke: #000;
   shape-rendering: crispEdges;
 }
+
+.dnum{
+  font-size:24px;
+  font-family: sans-serif;
+}

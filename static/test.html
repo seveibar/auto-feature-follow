@@ -2,6 +2,8 @@
 <html>
 <meta charset="utf-8">
 <link rel='stylesheet' type='text/css' href='main.css'/>
+<script src="sockjs.js"></script>
+<script src="socket-redis.js"></script>
 <body>
 
 <div id='graph1'></div>
@@ -14,9 +16,14 @@ var g = Graph({
   "elm": "#graph1"
 });
 
-setInterval(function(){
-  g.addPoint(Math.random() - .5);
-},1000);
+var socketRedis = new SocketRedis('http://127.0.0.1:8090');
+socketRedis.onopen = function() {
+  console.log("opened");
+    socketRedis.subscribe('coord', null, {foo: 'bar'}, function(event, data) {
+        g.addPoint(data[0])
+    });
+};
+
 
 </script>
 </body>

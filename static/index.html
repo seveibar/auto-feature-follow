@@ -2,6 +2,8 @@
   <head>
     <title>MILL Process Monitor</title>
     <link rel='stylesheet' type='text/css' href='main.css'/>
+    <script src="sockjs.js"></script>
+    <script src="socket-redis.js"></script>
     <script src='jquery.min.js'></script>
     <script src='d3.js'></script>
     <script src='graph.js'></script>
@@ -11,9 +13,17 @@
     <div id='top-row'>
       <div style='display:inline-block' id='plot1'></div>
       <div style='display:inline-block' id='plot2'></div>
+      <canvas id='can' width='400' height='400'></canvas>
     </div>
     <div id='bottom-row'>
       <img id='liveview' style='display:inline-block;width:400px;height:400px'/>
+      <textarea style='width:400px;height:400px;' id='xml'></textarea>
+      <div style='display:inline-block;width:400px;height:400px;' id='nums'>
+        <div id='xpos' class='dnum'></div>
+        <div id='ypos' class='dnum'></div>
+        <div id='speed' class='dnum'></div>
+        <div id='avgspeed' class='dnum'></div>
+      </div>
     </div>
   </body>
 </html>
