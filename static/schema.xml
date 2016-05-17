@@ -1,15 +1,96 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="/styles/Streams.xsl"?>
-<MTConnectStreams xmlns:m="urn:mtconnect.org:MTConnectStreams:1.3" xmlns="urn:mtconnect.org:MTConnectStreams:1.3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="./schema.xml">
-<Header creationTime="{TIME}" sender="mtcagent" instanceId="0" version="1.3.0.9" nextSequence="{SEQ}" firstSequence="0" lastSequence="{SEQ}"/>
-<Streams>
-    <DeviceStream name="VMC-3Axis" uuid="000">
-      <ComponentStream component="Linear" name="X" componentId="x1">
-      <Samples>
-        <Position dataItemId="x1" timestamp="{TIMESTAMP}" name="xPos" sequence="{SEQ}" subType="ACTUAL">{X}</Position>
-        <Position dataItemId="y1" timestamp="{TIMESTAMP}" name="yPos" sequence="{SEQ}" subType="ACTUAL">{Y}</Position>
-        <Position dataItemId="z1" timestamp="{TIMESTAMP}" name="zPos" sequence="{SEQ}" subType="ACTUAL">{Z}</Position>
-      </Samples>
-    </DeviceStream>
-</Streams>
-</MTConnectStreams>
+<MTConnectDevices
+	xmlns:m="urn:mtconnect.org:MTConnectDevices:1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:="urn:mtconnect.org:MTConnectDevices:1.2"
+	xsi:schemaLocation="urn:mtconnect.org:MTConnectDevices:1.2
+		http://www.mtconnect.org/schemas/MTConnectDevices_1.2.xsd">
+<!--Required in all MTConnectDevices-->
+
+<!--Device Information-->
+	<Device uuid="VF1" name="HAAS_VF-1" id="device1">
+		<!--more information about the device-->
+		<Description manufacturer="HASS" model="VF-1" serialNumber="01">
+			CNC Vertical Machining Center Mill
+		</Description>
+		<!--Device Components-->
+		<Components>
+			<!--Custom "Component" for part progress-->
+			<Throughput>
+				<DataItems>
+					<DataItem type="PROGRESS" name="codeProgress" category="SAMPLE"
+						id="progress1"/>
+					<DataItem type="COMPLETED" name="completedParts" category="EVENT"
+						id="parts1"/>
+				</DataItems>
+			</Throughput>
+			<!--To be used when the output from the serial port is ready-->
+			<!--
+			<Path id=”pth1” name=”path”>
+				<DataItems>
+					<DataItem type="LINE" name="line" category="EVENT"
+						id="path1"/>
+					<DataItem type="CONTROLLER_MODE" name="mode" category="EVENT"
+						id="path2"/>
+					<DataItem type="PROGRAM" name="program" category="EVENT"
+						id="path3"/>
+					<DataItem type="EXECUTION" name="execution" category="EVENT"
+						id="path4"/>
+				</DataItems>
+			</Path>
+			-->
+
+			<!--The 3 Axes Displacement-->
+			<Axes>
+				<Components>
+					<!--X-Axis-->
+					<Linear id="x1" name="X">
+						<DataItems>
+							<DataItem type="POSITION" name="xPos" category="SAMPLE"
+								id="xPosition1"/>
+						</DataItems>
+					</Linear>
+					<!--Y-Axis-->
+					<Linear id="y1" name="Y">
+						<DataItems>
+							<DataItem type="POSITION" name="yPos" category="SAMPLE"
+								id="yPosition1"/>
+						</DataItems>
+					</Linear>
+					<!--Z-Axis-->
+					<Linear id="z1" name="Z">
+						<DataItems>
+							<DataItem type="POSITION" name="zPos" category="SAMPLE"
+								id="zPosition1"/>
+						</DataItems>
+					</Linear>
+				</Components>
+			</Axes>
+
+			<!--Potential Sensor Suite-->
+			<!--
+			<Sensor id="disSens1" name="xDistanceSens">
+				<DataItems>
+					<DataItem type="POSITION" name="sensorDisX" category="SAMPLE"
+						id="senDis" units="Inches"/>
+				</DataItems>
+			</Sensor>
+			<Sensor id="disSens2" name="yDistanceSens">
+				<DataItems>
+					<DataItem type="POSITION" name="sensorDisY" category="SAMPLE"
+						id="senDis2" units="Inches"/>
+				</DataItems>
+			</Sensor>
+
+			<Sensor id="accelSens" name="accelSensor">
+				<DataItems>
+					<DataItem type="ACCELERATION" name="sensorAccelX"
+						category="SAMPLE" id="senAccel1" units="Meters/Second"/>
+					<DataItem type="ACCELERATION" name="sensorAccelY"
+						category="SAMPLE" id="senAccel2" units="Meters/Second"/>
+				</DataItems>
+			</Sensor>
+			-->
+
+		</Components>
+	</Device>
+</MTConnectDevices>
