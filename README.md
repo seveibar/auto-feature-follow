@@ -64,6 +64,10 @@ This project requires the following libraries/services to be installed.
 * Flask
 * OpenCV 2 (recommended 2.4.2)
 
+Simply running `run.sh` can then run the software.
+
+*NOTE: This application is currently working toward being packaged as an Electron application, this will allow for "single click" running of the application without dependency installation.*
+
 ## TODOs
 
 * Non-linear (radial or heterogenous) feature movement
