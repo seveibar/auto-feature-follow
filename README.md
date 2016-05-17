@@ -50,6 +50,8 @@ settings = lib.CalibrationSettings(
 
 loader = CamImageLoader()
 
+scene = lib.CalibrationScene(loader, 0, settings)
+
 newCoordinateProjection = scene.getAxisProjection(newFrame)
 ```
 
